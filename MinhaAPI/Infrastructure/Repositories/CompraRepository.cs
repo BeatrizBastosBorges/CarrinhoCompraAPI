@@ -31,15 +31,18 @@ namespace MinhaAPI.Infrastructure.Data.Repositories
 
         public async Task<CompraModel> CreateCompra(CompraModel compra)
         {
-            var resto = Math.Round((compra.ValorTotalCompra - compra.ValorParcela * compra.QtdParcelas), 2);
-
-            compra.ValorParcelaAuxiliar = Math.Round((compra.ValorParcela + resto), 2);
-
             var result = await _context.Compra.AddAsync(compra);
             await _context.SaveChangesAsync();
 
             result.State = EntityState.Detached;
             return result.Entity;
+        }
+
+        public async Task<int> UpdateCompra(CompraModel compra)
+        { 
+            _context.Entry(compra).State = EntityState.Modified;
+
+            return await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteCompra(int compraId)

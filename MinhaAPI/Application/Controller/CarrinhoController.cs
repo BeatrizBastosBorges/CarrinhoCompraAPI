@@ -76,7 +76,7 @@ namespace MinhaAPI.Application.Controller
         }
 
         [HttpPost("delete-produto-carrinho")]
-        public async Task<ActionResult> DeleteProdutoCarrinho([FromBody] int produtoId)
+        public async Task<ActionResult> DeleteProdutoCarrinho([FromQuery] int produtoId)
         {
             return Ok(await _carrinhoService.DeleteProdutoCarrinho(produtoId));
         }

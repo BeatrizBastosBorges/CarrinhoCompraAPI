@@ -49,14 +49,51 @@ namespace MinhaAPI.Domain.Services
             if (valorParcela < 40)
                 throw new ArgumentException("O valor minimo da paracela é R$ 40.00");
 
+            var resto = Math.Round((valorTotalCompra - valorParcela * quantidadeParcelas), 2);
+            double valorParcelaAuxiliar = Math.Round((valorParcela + resto), 2);
+
+            if (resto == 0)
+                valorParcelaAuxiliar = 0;
+            else
+                valorParcelaAuxiliar = Math.Round((valorParcela + resto), 2);
+
             var compra = new CompraModel
             {
                 ValorTotalCompra = valorTotalCompra,
                 QtdParcelas = quantidadeParcelas,
                 ValorParcela = valorParcela,
+                ValorParcelaAuxiliar = valorParcelaAuxiliar
             };
 
             return await _compraRepository.CreateCompra(compra);
+        }
+
+        public async Task<int> UpdateCompra(int compraId, int quantidadeParcelas)
+        {
+            if (quantidadeParcelas <= 0)
+                throw new ArgumentException("A quantidade de parcelas deve ser maior que zero.");
+
+            CompraModel compra = await _compraRepository.GetCompra(compraId);
+
+            if (compra == null)
+                throw new ArgumentException("Compra não existe!");
+
+            double valorParcela = Math.Round((compra.ValorTotalCompra / quantidadeParcelas), 2);
+
+            if (valorParcela < 40)
+                throw new ArgumentException("O valor mínimo da paracela é R$ 40.00");
+
+            var resto = Math.Round((compra.ValorTotalCompra - compra.ValorParcela * compra.QtdParcelas), 2);
+
+            if (resto == 0)
+                compra.ValorParcelaAuxiliar = 0;
+            else
+                compra.ValorParcelaAuxiliar = Math.Round((compra.ValorParcela + resto), 2);
+
+            compra.QtdParcelas = quantidadeParcelas;
+            compra.ValorParcela = valorParcela;
+
+            return await _compraRepository.UpdateCompra(compra);
         }
 
         public async Task<bool> DeleteCompra(int compraId)

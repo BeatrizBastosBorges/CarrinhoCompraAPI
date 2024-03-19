@@ -48,11 +48,25 @@ namespace MinhaAPI.Application.Controller
         }
 
         [HttpPost("create-compra")]
-        public async Task<ActionResult> CreateCompra([FromQuery] int quantidaParcelas)
+        public async Task<ActionResult> CreateCompra([FromQuery] int quantidadeParcelas)
         {
             try
             {
-                CompraModel compra = await _compraService.CreateCompra(quantidaParcelas);
+                CompraModel compra = await _compraService.CreateCompra(quantidadeParcelas);
+                return Ok(compra);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("update-compra")]
+        public async Task<ActionResult> UpdateCompra([FromQuery] int compraId, [FromQuery] int quantidadeParcelas)
+        {
+            try
+            {
+                var compra = await _compraService.UpdateCompra(compraId, quantidadeParcelas);
                 return Ok(compra);
             }
             catch (Exception ex)
@@ -62,7 +76,7 @@ namespace MinhaAPI.Application.Controller
         }
 
         [HttpPost("delete-compra")]
-        public async Task<ActionResult> DeleteCompra([FromBody] int compraId)
+        public async Task<ActionResult> DeleteCompra([FromQuery] int compraId)
         {
             return Ok(await _compraService.DeleteCompra(compraId));
         }
