@@ -45,6 +45,9 @@ namespace MinhaAPI
             services.AddScoped<CompraRepository>();
             services.AddScoped<CompraService>();
 
+            services.AddScoped<AbateRepository>();
+            services.AddScoped<AbateService>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MinhaAPI", Version = "v1" });

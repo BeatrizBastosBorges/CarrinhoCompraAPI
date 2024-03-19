@@ -61,7 +61,7 @@ namespace MinhaAPI.Domain.Services
             {
                 ValorTotalCompra = valorTotalCompra,
                 QtdParcelas = quantidadeParcelas,
-                ValorParcela = valorParcela,
+                ValorParcelas = valorParcela,
                 ValorParcelaAuxiliar = valorParcelaAuxiliar
             };
 
@@ -83,15 +83,15 @@ namespace MinhaAPI.Domain.Services
             if (valorParcela < 40)
                 throw new ArgumentException("O valor mínimo da paracela é R$ 40.00");
 
-            var resto = Math.Round((compra.ValorTotalCompra - compra.ValorParcela * compra.QtdParcelas), 2);
+            var resto = Math.Round((compra.ValorTotalCompra - compra.ValorParcelas * compra.QtdParcelas), 2);
 
             if (resto == 0)
                 compra.ValorParcelaAuxiliar = 0;
             else
-                compra.ValorParcelaAuxiliar = Math.Round((compra.ValorParcela + resto), 2);
+                compra.ValorParcelaAuxiliar = Math.Round((compra.ValorParcelas + resto), 2);
 
             compra.QtdParcelas = quantidadeParcelas;
-            compra.ValorParcela = valorParcela;
+            compra.ValorParcelas = valorParcela;
 
             return await _compraRepository.UpdateCompra(compra);
         }
