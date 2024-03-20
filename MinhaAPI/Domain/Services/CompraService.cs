@@ -11,12 +11,15 @@ namespace MinhaAPI.Domain.Services
     {
         private readonly CompraRepository _compraRepository;
         private readonly CarrinhoRepository _carrinhoRepository;
+        private readonly CompraProdutoRepository _compraProdutoRepository;
 
         public CompraService(CompraRepository compraRepository,
-                             CarrinhoRepository carrinhoRepository)
+                             CarrinhoRepository carrinhoRepository,
+                             CompraProdutoRepository compraProdutoRepository)
         {
             _compraRepository = compraRepository;
             _carrinhoRepository = carrinhoRepository;
+            _compraProdutoRepository = compraProdutoRepository;
         }
 
         public async Task<List<CompraModel>> ListCompras()
@@ -41,6 +44,8 @@ namespace MinhaAPI.Domain.Services
                 throw new ArgumentException("A quantidade de parcelas deve ser maior que zero.");
 
             var produtosCarrinho = await _carrinhoRepository.ListProdutosCarrinho();
+            if (produtosCarrinho.Count == 0)
+                throw new InvalidOperationException("Não é possível criar uma compra sem produtos no carrinho.");
 
             double valorTotalCompra = Math.Round((produtosCarrinho.Sum(item => item.ValorTotalProduto)), 2);
 
@@ -57,7 +62,7 @@ namespace MinhaAPI.Domain.Services
             else
                 valorParcelaAuxiliar = Math.Round((valorParcela + resto), 2);
 
-            var compra = new CompraModel
+            var createCompra = new CompraModel
             {
                 ValorTotalCompra = valorTotalCompra,
                 QtdParcelas = quantidadeParcelas,
@@ -65,7 +70,20 @@ namespace MinhaAPI.Domain.Services
                 ValorParcelaAuxiliar = valorParcelaAuxiliar
             };
 
-            return await _compraRepository.CreateCompra(compra);
+            var compra = await _compraRepository.CreateCompra(createCompra);
+
+            foreach (var produto in produtosCarrinho)
+            {
+                var compraProduto = new CompraProdutoModel
+                {
+                    CompraId = compra.Id,
+                    ProdutoId = produto.ProdutoId
+                };
+
+                await _compraProdutoRepository.AddCompraProduto(compraProduto);
+            }
+
+            return compra;
         }
 
         public async Task<int> UpdateCompra(int compraId, int quantidadeParcelas)

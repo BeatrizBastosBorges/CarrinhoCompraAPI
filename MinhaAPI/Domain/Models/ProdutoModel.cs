@@ -1,9 +1,13 @@
-﻿namespace MinhaAPI.Domain.Models
+﻿using System.Collections.Generic;
+
+namespace MinhaAPI.Domain.Models
 {
     public class ProdutoModel
     {
         public int Id { get; set; }
-        public string nomeProduto { get; set; }
-        public double precoUnitarioProduto { get; set; }
+        public string NomeProduto { get; set; }
+        public double PrecoUnitarioProduto { get; set; }
+
+        public List<CompraProdutoModel> ComprasProduto { get; set; }
     }
 }

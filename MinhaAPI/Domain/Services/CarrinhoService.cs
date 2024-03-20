@@ -30,7 +30,7 @@ namespace MinhaAPI.Domain.Services
         {
             CarrinhoModel produto = await _carrinhoRepository.GetProdutoCarrinho(produtoId);
 
-            if (produtoId == null)
+            if (produto == null)
                 throw new ArgumentException("Produto não existe!");
 
             return produto;
@@ -52,7 +52,7 @@ namespace MinhaAPI.Domain.Services
             {
                 ProdutoId = produtoId,
                 QtdProduto = quantidade,
-                ValorTotalProduto = produto.precoUnitarioProduto * quantidade
+                ValorTotalProduto = produto.PrecoUnitarioProduto * quantidade
             };
 
             await _carrinhoRepository.AddProduto(produtoCarrinho);
@@ -79,7 +79,7 @@ namespace MinhaAPI.Domain.Services
 
             produtoCarrinho.ProdutoId = produtoId;
             produtoCarrinho.QtdProduto = quantidade;
-            produtoCarrinho.ValorTotalProduto = produto.precoUnitarioProduto * quantidade;
+            produtoCarrinho.ValorTotalProduto = produto.PrecoUnitarioProduto * quantidade;
 
             await _carrinhoRepository.UpdateProdutoCarrinho(produtoCarrinho);
         }

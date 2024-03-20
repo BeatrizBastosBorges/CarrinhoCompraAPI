@@ -36,6 +36,12 @@ namespace MinhaAPI
 
             services.AddControllers();
 
+            services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+            });
+
             services.AddScoped<ProdutoRepository>();
             services.AddScoped<ProdutoService>();
 
@@ -47,6 +53,9 @@ namespace MinhaAPI
 
             services.AddScoped<AbateRepository>();
             services.AddScoped<AbateService>();
+
+            services.AddScoped<CompraProdutoRepository>();
+            services.AddScoped<CompraProdutoService>();
 
             services.AddSwaggerGen(c =>
             {
