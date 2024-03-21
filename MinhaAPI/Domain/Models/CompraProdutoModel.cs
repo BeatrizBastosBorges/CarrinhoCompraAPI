@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace MinhaAPI.Domain.Models
+﻿namespace MinhaAPI.Domain.Models
 {
     public class CompraProdutoModel
     {

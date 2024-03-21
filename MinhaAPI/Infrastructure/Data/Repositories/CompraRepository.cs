@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MinhaAPI.Domain.Models;
 using MinhaAPI.Infrastructure.Data.Contexts;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

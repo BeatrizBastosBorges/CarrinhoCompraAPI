@@ -1,20 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using MinhaAPI.Domain.Services;
 using MinhaAPI.Infrastructure.Data.Contexts;
 using MinhaAPI.Infrastructure.Data.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MinhaAPI
 {
@@ -36,12 +29,6 @@ namespace MinhaAPI
 
             services.AddControllers();
 
-            services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-            });
-
             services.AddScoped<ProdutoRepository>();
             services.AddScoped<ProdutoService>();
 
@@ -50,9 +37,6 @@ namespace MinhaAPI
 
             services.AddScoped<CompraRepository>();
             services.AddScoped<CompraService>();
-
-            services.AddScoped<AbateRepository>();
-            services.AddScoped<AbateService>();
 
             services.AddScoped<CompraProdutoRepository>();
             services.AddScoped<CompraProdutoService>();

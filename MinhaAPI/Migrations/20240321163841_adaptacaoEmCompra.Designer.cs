@@ -2,21 +2,52 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MinhaAPI.Infrastructure.Data.Contexts;
 
 namespace MinhaAPI.Migrations
 {
     [DbContext(typeof(SqlServerContext))]
-    partial class SqlServerContextModelSnapshot : ModelSnapshot
+    [Migration("20240321163841_adaptacaoEmCompra")]
+    partial class adaptacaoEmCompra
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .UseIdentityColumns()
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("MinhaAPI.Domain.Models.AbateModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .UseIdentityColumn();
+
+                    b.Property<int>("CompraId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("NovoValorParcelaAuxiliar")
+                        .HasColumnType("float");
+
+                    b.Property<double>("NovoValorParcelas")
+                        .HasColumnType("float");
+
+                    b.Property<double>("NovoValorTotalCompra")
+                        .HasColumnType("float");
+
+                    b.Property<double>("ValorAbate")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompraId");
+
+                    b.ToTable("Abate");
+                });
 
             modelBuilder.Entity("MinhaAPI.Domain.Models.CarrinhoModel", b =>
                 {
@@ -51,9 +82,6 @@ namespace MinhaAPI.Migrations
                     b.Property<int>("QtdParcelas")
                         .HasColumnType("int");
 
-                    b.Property<int>("QtdParcelasAtual")
-                        .HasColumnType("int");
-
                     b.Property<double>("ValorAbatido")
                         .HasColumnType("float");
 
@@ -61,9 +89,6 @@ namespace MinhaAPI.Migrations
                         .HasColumnType("float");
 
                     b.Property<double>("ValorParcelas")
-                        .HasColumnType("float");
-
-                    b.Property<double>("ValorRestante")
                         .HasColumnType("float");
 
                     b.Property<double>("ValorTotalCompra")
@@ -105,6 +130,17 @@ namespace MinhaAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Produto");
+                });
+
+            modelBuilder.Entity("MinhaAPI.Domain.Models.AbateModel", b =>
+                {
+                    b.HasOne("MinhaAPI.Domain.Models.CompraModel", "Compra")
+                        .WithMany()
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Compra");
                 });
 
             modelBuilder.Entity("MinhaAPI.Domain.Models.CarrinhoModel", b =>

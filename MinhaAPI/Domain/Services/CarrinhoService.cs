@@ -2,7 +2,6 @@
 using MinhaAPI.Infrastructure.Data.Repositories;
 using System.Collections.Generic;
 using System;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 
 namespace MinhaAPI.Domain.Services
@@ -11,13 +10,13 @@ namespace MinhaAPI.Domain.Services
     {
         private readonly CarrinhoRepository _carrinhoRepository;
         private readonly ProdutoRepository _produtoRepository;
+        
 
         public CarrinhoService(CarrinhoRepository carrinhoRepository,
                                ProdutoRepository produtoRepository)
         {
             _carrinhoRepository = carrinhoRepository;
             _produtoRepository = produtoRepository;
-
         }
 
         public async Task<List<CarrinhoModel>> ListProdutosCarrinho()
@@ -64,18 +63,12 @@ namespace MinhaAPI.Domain.Services
                 throw new ArgumentException("A quantidade deve ser maior que zero.");
 
             var produtoCarrinho = await _carrinhoRepository.GetProdutoCarrinho(carrinhoId);
-
             if (produtoCarrinho == null)
-            {
                 throw new ArgumentException("Compra não encontrada.");
-            }
 
             var produto = await _produtoRepository.GetProduto(produtoId);
-
             if (produto == null)
-            {
                 throw new ArgumentException("Produto não encontrado.");
-            }
 
             produtoCarrinho.ProdutoId = produtoId;
             produtoCarrinho.QtdProduto = quantidade;

@@ -3,7 +3,6 @@ using MinhaAPI.Domain.Models;
 using MinhaAPI.Domain.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MinhaAPI.Application.Controller
@@ -61,12 +60,12 @@ namespace MinhaAPI.Application.Controller
             }
         }
 
-        [HttpPost("update-compra")]
-        public async Task<ActionResult> UpdateCompra([FromQuery] int compraId, [FromQuery] int quantidadeParcelas)
+        [HttpPost("abater-valor-compra")]
+        public async Task<ActionResult> AbaterValorCompra([FromQuery] int compraId, [FromQuery] double valorAbate)
         {
             try
             {
-                var compra = await _compraService.UpdateCompra(compraId, quantidadeParcelas);
+                var compra = await _compraService.AbaterValorCompra(compraId, valorAbate);
                 return Ok(compra);
             }
             catch (Exception ex)

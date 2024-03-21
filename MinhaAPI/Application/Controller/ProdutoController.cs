@@ -3,7 +3,6 @@ using MinhaAPI.Domain.Models;
 using MinhaAPI.Domain.Services;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MinhaAPI.Application.Controller

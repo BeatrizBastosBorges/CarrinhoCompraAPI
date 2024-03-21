@@ -67,9 +67,12 @@ namespace MinhaAPI.Domain.Services
                 ValorTotalCompra = valorTotalCompra,
                 QtdParcelas = quantidadeParcelas,
                 ValorParcelas = valorParcela,
-                ValorParcelaAuxiliar = valorParcelaAuxiliar
+                ValorParcelaAuxiliar = valorParcelaAuxiliar,
+                QtdParcelasAtual = quantidadeParcelas,
+                ValorAbatido = 0,
+                ValorRestante = valorTotalCompra
             };
-
+            
             var compra = await _compraRepository.CreateCompra(createCompra);
 
             foreach (var produto in produtosCarrinho)
@@ -86,30 +89,35 @@ namespace MinhaAPI.Domain.Services
             return compra;
         }
 
-        public async Task<int> UpdateCompra(int compraId, int quantidadeParcelas)
+        public async Task<int> AbaterValorCompra(int compraId, double valorAbate)
         {
-            if (quantidadeParcelas <= 0)
-                throw new ArgumentException("A quantidade de parcelas deve ser maior que zero.");
+            if (valorAbate <= 0)
+                throw new ArgumentException("O valor deve ser maior que zero.");
 
-            CompraModel compra = await _compraRepository.GetCompra(compraId);
-
+            var compra = await _compraRepository.GetCompra(compraId);
             if (compra == null)
-                throw new ArgumentException("Compra não existe!");
+                throw new ArgumentException("Compra não encontrada.");
 
-            double valorParcela = Math.Round((compra.ValorTotalCompra / quantidadeParcelas), 2);
+            compra.ValorAbatido += valorAbate;
 
-            if (valorParcela < 40)
-                throw new ArgumentException("O valor mínimo da paracela é R$ 40.00");
+            double somaParcelas = 0;
 
-            var resto = Math.Round((compra.ValorTotalCompra - compra.ValorParcelas * compra.QtdParcelas), 2);
+            while(somaParcelas < valorAbate && compra.QtdParcelasAtual > 0)
+            {
+                somaParcelas += compra.ValorParcelas;
+                compra.QtdParcelasAtual--;
+            }
 
-            if (resto == 0)
+            if (somaParcelas > valorAbate)
+                compra.ValorParcelaAuxiliar = compra.ValorTotalCompra - valorAbate - (compra.ValorParcelas * (compra.QtdParcelasAtual - 1));
+
+            if (somaParcelas == compra.ValorParcelas)
                 compra.ValorParcelaAuxiliar = 0;
-            else
-                compra.ValorParcelaAuxiliar = Math.Round((compra.ValorParcelas + resto), 2);
 
-            compra.QtdParcelas = quantidadeParcelas;
-            compra.ValorParcelas = valorParcela;
+            compra.ValorRestante -= valorAbate;
+
+            if ((compra.ValorRestante % compra.ValorParcelas) == 0)
+                compra.QtdParcelasAtual = (int)(compra.ValorRestante / compra.ValorParcelas);
 
             return await _compraRepository.UpdateCompra(compra);
         }
@@ -120,6 +128,8 @@ namespace MinhaAPI.Domain.Services
 
             if (findCompra == null)
                 throw new ArgumentException("Compra não existe!");
+
+            await _compraProdutoRepository.DeleteProdutosDaCompra(compraId);
 
             await _compraRepository.DeleteCompra(compraId);
 
