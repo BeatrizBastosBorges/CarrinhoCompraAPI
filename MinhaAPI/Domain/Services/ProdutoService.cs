@@ -58,7 +58,7 @@ namespace MinhaAPI.Domain.Services
 
             bool produtoEstaVinculadoACompra = await _compraProdutoRepository.ProdutoVinculadoACompra(produtoId);
             if (produtoEstaVinculadoACompra)
-                throw new InvalidOperationException("Não é possível apagar um produto que já esteja vinculado a uma compra.");
+                throw new ArgumentException("Não é possível apagar um produto que já esteja vinculado a uma compra.");
 
             await _produtoRepository.DeleteProduto(produtoId);
 

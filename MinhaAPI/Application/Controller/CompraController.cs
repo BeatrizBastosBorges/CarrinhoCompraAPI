@@ -56,7 +56,11 @@ namespace MinhaAPI.Application.Controller
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                if (ex.InnerException != null)
+                    return BadRequest(ex.InnerException.Message);
+
+                else
+                    return BadRequest(ex.Message);
             }
         }
 

@@ -20,7 +20,7 @@ namespace MinhaAPI.Infrastructure.Data.Contexts
             modelBuilder.Entity<ProdutoModel>().ToTable("Produto").HasKey(p => p.Id);
             modelBuilder.Entity<CarrinhoModel>().ToTable("Carrinho").HasKey(c => c.Id);
             modelBuilder.Entity<CompraModel>().ToTable("Compra").HasKey(o => o.Id);
-            modelBuilder.Entity<CompraProdutoModel>().ToTable("CompraProduto").HasKey(cp => new { cp.CompraId, cp.ProdutoId });
+            modelBuilder.Entity<CompraProdutoModel>().ToTable("CompraProduto").HasKey(cp => cp.Id);
 
             modelBuilder.Entity<CarrinhoModel>()
             .HasOne(c => c.Produto)

@@ -41,6 +41,7 @@ namespace MinhaAPI.Infrastructure.Data.Repositories
         {
             _context.CompraProdutos.Add(compraProduto);
             await _context.SaveChangesAsync();
+
         }
 
         public async Task<bool> DeleteProdutosDaCompra(int compraId)

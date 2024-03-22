@@ -2,6 +2,8 @@
 {
     public class CompraProdutoModel
     {
+        public int Id { get; set; }
+
         public int CompraId { get; set; }
         public CompraModel Compra { get; set; }
 
