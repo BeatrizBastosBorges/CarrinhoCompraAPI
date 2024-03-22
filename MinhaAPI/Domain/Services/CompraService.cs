@@ -98,26 +98,29 @@ namespace MinhaAPI.Domain.Services
             if (compra == null)
                 throw new ArgumentException("Compra não encontrada.");
 
-            compra.ValorAbatido += valorAbate;
-
-            double somaParcelas = 0;
-
-            while(somaParcelas < valorAbate && compra.QtdParcelasAtual > 0)
-            {
-                somaParcelas += compra.ValorParcelas;
-                compra.QtdParcelasAtual--;
-            }
-
-            if (somaParcelas > valorAbate)
-                compra.ValorParcelaAuxiliar = compra.ValorTotalCompra - valorAbate - (compra.ValorParcelas * (compra.QtdParcelasAtual - 1));
-
-            if (somaParcelas == compra.ValorParcelas)
-                compra.ValorParcelaAuxiliar = 0;
+            if (valorAbate > compra.ValorRestante)
+                throw new ArgumentException("O valor de abate excede o valor restante da compra.");
 
             compra.ValorRestante -= valorAbate;
 
-            if ((compra.ValorRestante % compra.ValorParcelas) == 0)
-                compra.QtdParcelasAtual = (int)(compra.ValorRestante / compra.ValorParcelas);
+            int parcelasRestantes = (int)Math.Ceiling(compra.ValorRestante / compra.ValorParcelas);
+            compra.QtdParcelasAtual = parcelasRestantes;
+
+            if (compra.QtdParcelasAtual < 0)
+                compra.QtdParcelasAtual = 0;
+
+            double somaParcelas = compra.ValorParcelas * parcelasRestantes; ;
+
+            if (somaParcelas > compra.ValorRestante)
+            {
+                double diferenca = compra.ValorRestante - ((parcelasRestantes - 1) * compra.ValorParcelas);
+                compra.ValorParcelaAuxiliar = compra.ValorParcelas + diferenca;
+                compra.QtdParcelasAtual--;
+            }
+            else
+                compra.ValorParcelaAuxiliar = 0;
+
+            compra.ValorAbatido += valorAbate;
 
             return await _compraRepository.UpdateCompra(compra);
         }
