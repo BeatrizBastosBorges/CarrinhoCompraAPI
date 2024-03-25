@@ -27,7 +27,11 @@ namespace MinhaAPI
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), builder =>
                             builder.MigrationsAssembly("MinhaAPI")));
 
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+                });
 
             services.AddScoped<ProdutoRepository>();
             services.AddScoped<ProdutoService>();

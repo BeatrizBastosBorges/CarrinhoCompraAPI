@@ -22,14 +22,14 @@ namespace MinhaAPI.Domain.Services
             _produtoRepository = produtoRepository;
         }
 
-        public async Task<List<ProdutoModel>> GetProdutosDaCompra(int compraId)
+        public async Task<List<ProdutoModel>> ListProdutosDaCompra(int compraId)
         {
-            var compraProdutos = await _compraProdutoRepository.GetProdutosDaCompra(compraId);
+            List<CompraProdutoModel> list = await _compraProdutoRepository.ListProdutosDaCompra(compraId);
 
-            if (compraProdutos == null || !compraProdutos.Any())
+            if (list == null || !list.Any())
                 throw new ArgumentException("Não há produtos associados a esta compra.");
 
-            return compraProdutos.Select(cp => cp.Produto).ToList();
+            return list.Select(cp => cp.Produto).ToList();
         }
 
         public async Task<string> GerarParcelaProduto(int compraId, int produtoId)

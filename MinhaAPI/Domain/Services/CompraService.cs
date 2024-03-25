@@ -80,10 +80,13 @@ namespace MinhaAPI.Domain.Services
                 var compraProduto = new CompraProdutoModel
                 {
                     CompraId = compra.Id,
-                    ProdutoId = produto.ProdutoId
+                    ProdutoId = produto.ProdutoId,
+                    QtdProduto = produto.QtdProduto
                 };
 
                 await _compraProdutoRepository.AddCompraProduto(compraProduto);
+
+                await _carrinhoRepository.DeleteProdutoCarrinho(produto.Id);
             }
 
             return compra;
@@ -117,8 +120,14 @@ namespace MinhaAPI.Domain.Services
                 compra.ValorParcelaAuxiliar = compra.ValorParcelas + diferenca;
                 compra.QtdParcelasAtual--;
             }
-            else
+            else if (valorAbate == compra.ValorParcelaAuxiliar)
+            {
                 compra.ValorParcelaAuxiliar = 0;
+            }
+            else
+            {
+                compra.ValorParcelaAuxiliar = 0;
+            }
 
             compra.ValorAbatido += valorAbate;
 

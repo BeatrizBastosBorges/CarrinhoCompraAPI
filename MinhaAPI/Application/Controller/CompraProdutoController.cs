@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MinhaAPI.Domain.Models;
 using MinhaAPI.Domain.Services;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MinhaAPI.Application.Controller
@@ -17,12 +19,12 @@ namespace MinhaAPI.Application.Controller
         }
 
         [HttpGet("get-produtos-da-compra")]
-        public async Task<ActionResult> GetProdutosDaCompra([FromQuery] int compraId)
+        public async Task<ActionResult> ListProdutosDaCompra([FromQuery] int compraId)
         {
             try
             {
-                var produtosDaCompra = await _compraProdutoService.GetProdutosDaCompra(compraId);
-                return Ok(produtosDaCompra);
+                List<ProdutoModel> list = await _compraProdutoService.ListProdutosDaCompra(compraId);
+                return Ok(list);
             }
             catch (Exception ex)
             {

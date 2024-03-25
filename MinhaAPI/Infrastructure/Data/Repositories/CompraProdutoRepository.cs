@@ -16,12 +16,14 @@ namespace MinhaAPI.Infrastructure.Data.Repositories
             _context = context;
         }
 
-        public async Task<List<CompraProdutoModel>> GetProdutosDaCompra(int compraId)
+        public async Task<List<CompraProdutoModel>> ListProdutosDaCompra(int compraId)
         {
-            return await _context.CompraProdutos
+            List<CompraProdutoModel> list = await _context.CompraProdutos
                 .Include(cp => cp.Produto)
                 .Where(cp => cp.CompraId == compraId)
                 .ToListAsync();
+
+            return list;
         }
 
         public async Task<bool> ProdutoVinculadoACompra(int produtoId)

@@ -50,6 +50,9 @@ namespace MinhaAPI.Infrastructure.Data.Repositories
         {
             var item = await _context.Carrinho.FindAsync(produtoId);
 
+            if (item == null)
+                return false;
+
             _context.Carrinho.Remove(item);
             await _context.SaveChangesAsync();
 

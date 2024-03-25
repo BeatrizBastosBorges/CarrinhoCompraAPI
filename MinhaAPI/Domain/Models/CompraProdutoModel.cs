@@ -9,5 +9,7 @@
 
         public int ProdutoId { get; set; }
         public ProdutoModel Produto { get; set; }
+
+        public int QtdProduto { get; set; }
     }
 }
