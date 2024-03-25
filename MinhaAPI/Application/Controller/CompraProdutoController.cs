@@ -45,5 +45,19 @@ namespace MinhaAPI.Application.Controller
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("unidade-produto-parcela")]
+        public async Task<ActionResult> GerarParcelaUnidadeProduto([FromQuery] int compraId, [FromQuery] int produtoId)
+        {
+            try
+            {
+                var parcelaUnidadeProduto = await _compraProdutoService.GerarParcelaUnidadeProduto(compraId, produtoId);
+                return Ok(parcelaUnidadeProduto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -46,6 +46,33 @@ namespace MinhaAPI.Domain.Services
             if (produto == null)
                 throw new ArgumentException("Produto não existe!");
 
+            double parcelaProduto = Math.Round(((produto.PrecoUnitarioProduto * compraProduto.QtdProduto) / compra.QtdParcelas), 2);
+
+            var resto = Math.Round(((produto.PrecoUnitarioProduto * compraProduto.QtdProduto) - parcelaProduto * compra.QtdParcelas), 2);
+
+            if (resto == 0)
+                return ($"O produto está parcelado em {compra.QtdParcelas} vezes de R$ {parcelaProduto};");
+            else
+            {
+                double parcelaAuxiliarProduto = Math.Round((parcelaProduto + resto), 2);
+                return ($"O produto está parcelado em {compra.QtdParcelas - 1} vezes de R$ {parcelaProduto} e uma parcela de R$ {parcelaAuxiliarProduto};");
+            }
+        }
+
+        public async Task<string> GerarParcelaUnidadeProduto(int compraId, int produtoId)
+        {
+            CompraProdutoModel compraProduto = await _compraProdutoRepository.GetCompraProduto(compraId, produtoId);
+            if (compraProduto == null)
+                throw new ArgumentException("Dados inválidos.");
+
+            CompraModel compra = await _compraRepository.GetCompra(compraId);
+            if (compra == null)
+                throw new ArgumentException("Compra não existe!");
+
+            ProdutoModel produto = await _produtoRepository.GetProduto(produtoId);
+            if (produto == null)
+                throw new ArgumentException("Produto não existe!");
+
             double parcelaProduto = Math.Round((produto.PrecoUnitarioProduto / compra.QtdParcelas), 2);
 
             var resto = Math.Round((produto.PrecoUnitarioProduto - parcelaProduto * compra.QtdParcelas), 2);
