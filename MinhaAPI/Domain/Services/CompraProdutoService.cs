@@ -25,8 +25,11 @@ namespace MinhaAPI.Domain.Services
         // Lista todos o produtos vinculados a determinada compra
         public async Task<List<ProdutoModel>> ListProdutosDaCompra(int compraId)
         {
-            List<CompraProdutoModel> list = await _compraProdutoRepository.ListProdutosDaCompra(compraId);
+            var compra = await _compraRepository.GetCompra(compraId);
+            if (compra == null)
+                throw new ArgumentException("Compra não encontrada.");
 
+            List<CompraProdutoModel> list = await _compraProdutoRepository.ListProdutosDaCompra(compraId);
             if (list == null || !list.Any())
                 throw new ArgumentException("Não há produtos associados a esta compra.");
 

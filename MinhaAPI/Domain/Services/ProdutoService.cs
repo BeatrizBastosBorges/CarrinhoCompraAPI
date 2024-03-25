@@ -9,12 +9,15 @@ namespace MinhaAPI.Domain.Services
     public class ProdutoService
     {
         private readonly ProdutoRepository _produtoRepository;
+        private readonly CarrinhoRepository _carrinhoRepository;
         private readonly CompraProdutoRepository _compraProdutoRepository;
 
         public ProdutoService(ProdutoRepository produtoRepository,
+                              CarrinhoRepository carrinhoRepository,
                               CompraProdutoRepository compraProduto)
         {
             _produtoRepository = produtoRepository;
+            _carrinhoRepository = carrinhoRepository;
             _compraProdutoRepository = compraProduto;
         }
 
@@ -49,7 +52,11 @@ namespace MinhaAPI.Domain.Services
         {
             bool produtoEstaVinculadoACompra = await _compraProdutoRepository.ProdutoVinculadoACompra(produto.Id);
             if (produtoEstaVinculadoACompra)
-                throw new InvalidOperationException("Não é possível atualizar um produto que já esteja vinculado a uma compra.");
+                throw new ArgumentException("Não é possível atualizar um produto que já esteja vinculado a uma compra.");
+
+            var produtoCarrinho = await _carrinhoRepository.GetProdutoCarrinho(produto.Id);
+            if (produtoCarrinho == null)
+                throw new ArgumentException("Não é possível atualizar um produto que já esteja vinculado a um carrinho");
 
             return await _produtoRepository.UpdateProduto(produto);
         }
@@ -64,6 +71,10 @@ namespace MinhaAPI.Domain.Services
             bool produtoEstaVinculadoACompra = await _compraProdutoRepository.ProdutoVinculadoACompra(produtoId);
             if (produtoEstaVinculadoACompra)
                 throw new ArgumentException("Não é possível apagar um produto que já esteja vinculado a uma compra.");
+
+            var produtoCarrinho = await _carrinhoRepository.GetProdutoCarrinho(produtoId);
+            if (produtoCarrinho == null)
+                throw new ArgumentException("Não é possível atualizar um produto que já esteja vinculado a um carrinho");
 
             await _produtoRepository.DeleteProduto(produtoId);
 
