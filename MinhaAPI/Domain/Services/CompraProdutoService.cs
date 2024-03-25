@@ -22,6 +22,7 @@ namespace MinhaAPI.Domain.Services
             _produtoRepository = produtoRepository;
         }
 
+        // Lista todos o produtos vinculados a determinada compra
         public async Task<List<ProdutoModel>> ListProdutosDaCompra(int compraId)
         {
             List<CompraProdutoModel> list = await _compraProdutoRepository.ListProdutosDaCompra(compraId);
@@ -32,6 +33,7 @@ namespace MinhaAPI.Domain.Services
             return list.Select(cp => cp.Produto).ToList();
         }
 
+        // Gera o quanto um produto vale em cada parcela da compra, lvando em conta a quantidade total desse produto
         public async Task<string> GerarParcelaProduto(int compraId, int produtoId)
         {
             CompraProdutoModel compraProduto = await _compraProdutoRepository.GetCompraProduto(compraId, produtoId);
@@ -46,8 +48,10 @@ namespace MinhaAPI.Domain.Services
             if (produto == null)
                 throw new ArgumentException("Produto não existe!");
 
+            // Calcula a parcela
             double parcelaProduto = Math.Round(((produto.PrecoUnitarioProduto * compraProduto.QtdProduto) / compra.QtdParcelas), 2);
 
+            // Checa se uma das parcelas terá um valor diferente
             var resto = Math.Round(((produto.PrecoUnitarioProduto * compraProduto.QtdProduto) - parcelaProduto * compra.QtdParcelas), 2);
 
             if (resto == 0)
@@ -59,6 +63,7 @@ namespace MinhaAPI.Domain.Services
             }
         }
 
+        // Gera o quanto um produto vale em cada parcela da compra, lvando em conta a quantidade total desse produto
         public async Task<string> GerarParcelaUnidadeProduto(int compraId, int produtoId)
         {
             CompraProdutoModel compraProduto = await _compraProdutoRepository.GetCompraProduto(compraId, produtoId);
@@ -73,8 +78,10 @@ namespace MinhaAPI.Domain.Services
             if (produto == null)
                 throw new ArgumentException("Produto não existe!");
 
+            // Calcula a parcela
             double parcelaProduto = Math.Round((produto.PrecoUnitarioProduto / compra.QtdParcelas), 2);
 
+            // Checa se uma das parcelas terá um valor diferente
             var resto = Math.Round((produto.PrecoUnitarioProduto - parcelaProduto * compra.QtdParcelas), 2);
 
             if (resto == 0)

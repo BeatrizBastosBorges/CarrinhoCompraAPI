@@ -19,12 +19,14 @@ namespace MinhaAPI.Domain.Services
             _produtoRepository = produtoRepository;
         }
 
+        // Lista todos o produtos que estão atualmente no carrinho
         public async Task<List<CarrinhoModel>> ListProdutosCarrinho()
         {
             List<CarrinhoModel> list = await _carrinhoRepository.ListProdutosCarrinho();
             return list;
         }
 
+        // Pega um produto específico do carrinho
         public async Task<CarrinhoModel> GetProdutoCarrinho(int produtoId)
         {
             CarrinhoModel produto = await _carrinhoRepository.GetProdutoCarrinho(produtoId);
@@ -35,6 +37,7 @@ namespace MinhaAPI.Domain.Services
             return produto;
         }
 
+        // Adiciona um produto ao carrinho
         public async Task AddProduto(int produtoId, int quantidade)
         {
             if (quantidade <= 0)
@@ -56,7 +59,7 @@ namespace MinhaAPI.Domain.Services
 
             await _carrinhoRepository.AddProduto(produtoCarrinho);
         }
-
+        // Atualiza a quantidade de um produto do carrinho
         public async Task UpdateProdutoCarrinho(int carrinhoId, int produtoId, int quantidade)
         {
             if (quantidade <= 0)
@@ -77,6 +80,7 @@ namespace MinhaAPI.Domain.Services
             await _carrinhoRepository.UpdateProdutoCarrinho(produtoCarrinho);
         }
 
+        // Apaga um produto do carrinho
         public async Task<bool> DeleteProdutoCarrinho(int produtoId)
         {
             CarrinhoModel findProduto = await _carrinhoRepository.GetProdutoCarrinho(produtoId);

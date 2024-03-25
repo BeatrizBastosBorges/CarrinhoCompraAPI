@@ -18,12 +18,14 @@ namespace MinhaAPI.Domain.Services
             _compraProdutoRepository = compraProduto;
         }
 
+        // Lista todos os produtos existentes
         public async Task<List<ProdutoModel>> ListProdutos()
         {
             List<ProdutoModel> list = await _produtoRepository.ListProdutos();
             return list;
         }
 
+        // Busca um determinado produto
         public async Task<ProdutoModel> GetProduto(int produtoId)
         {
             ProdutoModel produto = await _produtoRepository.GetProduto(produtoId);
@@ -34,6 +36,7 @@ namespace MinhaAPI.Domain.Services
             return produto;
         }
 
+        // Cria um produto
         public async Task<ProdutoModel> CreateProduto(ProdutoModel produto)
         {
             produto = await _produtoRepository.CreateProduto(produto);
@@ -41,6 +44,7 @@ namespace MinhaAPI.Domain.Services
             return produto;
         }
 
+        // Atualiza um produto
         public async Task<int> UpdateProduto(ProdutoModel produto)
         {
             bool produtoEstaVinculadoACompra = await _compraProdutoRepository.ProdutoVinculadoACompra(produto.Id);
@@ -50,6 +54,7 @@ namespace MinhaAPI.Domain.Services
             return await _produtoRepository.UpdateProduto(produto);
         }
 
+        // Apaga um determinado produto
         public async Task<bool> DeleteProduto(int produtoId)
         {
             ProdutoModel findProduto = await _produtoRepository.GetProduto(produtoId);
