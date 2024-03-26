@@ -1,3 +1,6 @@
+using CarrinhoCompraAPI.Domain.Services;
+using CarrinhoCompraAPI.Infrastructure.Data.Contexts;
+using CarrinhoCompraAPI.Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -5,11 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using MinhaAPI.Domain.Services;
-using MinhaAPI.Infrastructure.Data.Contexts;
-using MinhaAPI.Infrastructure.Data.Repositories;
 
-namespace MinhaAPI
+namespace CarrinhoCompraAPI
 {
     public class Startup
     {
@@ -25,7 +25,7 @@ namespace MinhaAPI
         {
             services.AddDbContext<SqlServerContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), builder =>
-                            builder.MigrationsAssembly("MinhaAPI")));
+                            builder.MigrationsAssembly("CarrinhoCompraAPI")));
 
             services.AddControllers()
                 .AddJsonOptions(options =>

@@ -1,16 +1,16 @@
-﻿using MinhaAPI.Domain.Models;
-using MinhaAPI.Infrastructure.Data.Repositories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
+using CarrinhoCompraAPI.Domain.Models;
+using CarrinhoCompraAPI.Infrastructure.Data.Repositories;
 
-namespace MinhaAPI.Domain.Services
+namespace CarrinhoCompraAPI.Domain.Services
 {
     public class CarrinhoService
     {
         private readonly CarrinhoRepository _carrinhoRepository;
         private readonly ProdutoRepository _produtoRepository;
-        
+
 
         public CarrinhoService(CarrinhoRepository carrinhoRepository,
                                ProdutoRepository produtoRepository)
@@ -60,20 +60,19 @@ namespace MinhaAPI.Domain.Services
             await _carrinhoRepository.AddProduto(produtoCarrinho);
         }
         // Atualiza a quantidade de um produto do carrinho
-        public async Task UpdateProdutoCarrinho(int carrinhoId, int produtoId, int quantidade)
+        public async Task UpdateProdutoCarrinho(int produtoId, int quantidade)
         {
             if (quantidade <= 0)
                 throw new ArgumentException("A quantidade deve ser maior que zero.");
 
-            var produtoCarrinho = await _carrinhoRepository.GetProdutoCarrinho(carrinhoId);
+            var produtoCarrinho = await _carrinhoRepository.GetProdutoCarrinho(produtoId);
             if (produtoCarrinho == null)
-                throw new ArgumentException("Compra não encontrada.");
+                throw new ArgumentException("Produto não encontrado no carrinho.");
 
-            var produto = await _produtoRepository.GetProduto(produtoId);
+            var produto = await _produtoRepository.GetProduto(produtoCarrinho.ProdutoId);
             if (produto == null)
                 throw new ArgumentException("Produto não encontrado.");
 
-            produtoCarrinho.ProdutoId = produtoId;
             produtoCarrinho.QtdProduto = quantidade;
             produtoCarrinho.ValorTotalProduto = produto.PrecoUnitarioProduto * quantidade;
 

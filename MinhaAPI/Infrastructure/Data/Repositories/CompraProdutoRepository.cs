@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MinhaAPI.Domain.Models;
-using MinhaAPI.Infrastructure.Data.Contexts;
+﻿using CarrinhoCompraAPI.Domain.Models;
+using CarrinhoCompraAPI.Infrastructure.Data.Contexts;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MinhaAPI.Infrastructure.Data.Repositories
+namespace CarrinhoCompraAPI.Infrastructure.Data.Repositories
 {
     public class CompraProdutoRepository
     {

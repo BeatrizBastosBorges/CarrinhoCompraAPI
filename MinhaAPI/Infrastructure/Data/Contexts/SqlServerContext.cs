@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MinhaAPI.Domain.Models;
+﻿using CarrinhoCompraAPI.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace MinhaAPI.Infrastructure.Data.Contexts
+namespace CarrinhoCompraAPI.Infrastructure.Data.Contexts
 {
     public class SqlServerContext : DbContext
     {

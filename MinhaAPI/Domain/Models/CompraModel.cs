@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MinhaAPI.Domain.Models
+namespace CarrinhoCompraAPI.Domain.Models
 {
     public class CompraModel
     {

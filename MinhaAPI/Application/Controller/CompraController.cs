@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MinhaAPI.Domain.Models;
-using MinhaAPI.Domain.Services;
+﻿using CarrinhoCompraAPI.Domain.Models;
+using CarrinhoCompraAPI.Domain.Services;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MinhaAPI.Application.Controller
+namespace CarrinhoCompraAPI.Application.Controller
 {
     [Route("api/[controller]")]
     [ApiController]

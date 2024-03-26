@@ -1,10 +1,10 @@
-﻿using MinhaAPI.Domain.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
-using MinhaAPI.Infrastructure.Data.Repositories;
+using CarrinhoCompraAPI.Domain.Models;
+using CarrinhoCompraAPI.Infrastructure.Data.Repositories;
 
-namespace MinhaAPI.Domain.Services
+namespace CarrinhoCompraAPI.Domain.Services
 {
     public class ProdutoService
     {

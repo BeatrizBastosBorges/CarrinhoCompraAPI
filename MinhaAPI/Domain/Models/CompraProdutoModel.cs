@@ -1,4 +1,4 @@
-﻿namespace MinhaAPI.Domain.Models
+﻿namespace CarrinhoCompraAPI.Domain.Models
 {
     public class CompraProdutoModel
     {

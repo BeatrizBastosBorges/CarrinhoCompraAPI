@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.34407.143
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinhaAPI", "MinhaAPI\MinhaAPI.csproj", "{79D0288C-2983-4EB0-97C0-2E5B7E7C1459}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarrinhoCompraAPI", "MinhaAPI\CarrinhoCompraAPI.csproj", "{79D0288C-2983-4EB0-97C0-2E5B7E7C1459}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

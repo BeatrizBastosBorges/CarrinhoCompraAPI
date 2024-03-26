@@ -1,11 +1,11 @@
-﻿using MinhaAPI.Domain.Models;
-using MinhaAPI.Infrastructure.Data.Repositories;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.Linq;
+using CarrinhoCompraAPI.Domain.Models;
+using CarrinhoCompraAPI.Infrastructure.Data.Repositories;
 
-namespace MinhaAPI.Domain.Services
+namespace CarrinhoCompraAPI.Domain.Services
 {
     public class CompraService
     {
@@ -51,22 +51,22 @@ namespace MinhaAPI.Domain.Services
                 throw new InvalidOperationException("Não é possível criar uma compra sem produtos no carrinho.");
 
             // Calcula o valor total da compra
-            double valorTotalCompra = Math.Round((produtosCarrinho.Sum(item => item.ValorTotalProduto)), 2);
+            double valorTotalCompra = Math.Round(produtosCarrinho.Sum(item => item.ValorTotalProduto), 2);
 
             // Calcula o valor da parcela
-            double valorParcela = Math.Round((valorTotalCompra / quantidadeParcelas), 2);
+            double valorParcela = Math.Round(valorTotalCompra / quantidadeParcelas, 2);
 
             if (valorParcela < 40)
                 throw new ArgumentException("O valor minimo da paracela é R$ 40.00");
 
             // Checa se uma das parcelas terá um valor diferente
-            var resto = Math.Round((valorTotalCompra - valorParcela * quantidadeParcelas), 2);
-            double valorParcelaAuxiliar = Math.Round((valorParcela + resto), 2);
+            var resto = Math.Round(valorTotalCompra - valorParcela * quantidadeParcelas, 2);
+            double valorParcelaAuxiliar = Math.Round(valorParcela + resto, 2);
 
             if (resto == 0)
                 valorParcelaAuxiliar = 0;
             else
-                valorParcelaAuxiliar = Math.Round((valorParcela + resto), 2);
+                valorParcelaAuxiliar = Math.Round(valorParcela + resto, 2);
 
             var createCompra = new CompraModel
             {
@@ -78,7 +78,7 @@ namespace MinhaAPI.Domain.Services
                 ValorAbatido = 0,
                 ValorRestante = valorTotalCompra
             };
-            
+
             var compra = await _compraRepository.CreateCompra(createCompra);
 
             // Faz a relação de quais produtos e suas quantidades estão na compra criada
@@ -126,15 +126,15 @@ namespace MinhaAPI.Domain.Services
             double somaParcelas = compra.ValorParcelas * parcelasRestantes; ;
 
             // Checa se a soma das parcelas ultrapassar o valor restante e faz as devidas adaptações para cada caso
-            if (somaParcelas > compra.ValorRestante)
-            {
-                double diferenca = compra.ValorRestante - ((parcelasRestantes - 1) * compra.ValorParcelas);
-                compra.ValorParcelaAuxiliar = compra.ValorParcelas + diferenca;
-                compra.QtdParcelasAtual--;
-            }
-            else if (valorAbate == compra.ValorParcelaAuxiliar)
+            if (valorAbate == compra.ValorParcelaAuxiliar)
             {
                 compra.ValorParcelaAuxiliar = 0;
+            }
+            else if (somaParcelas > compra.ValorRestante)
+            {
+                double diferenca = compra.ValorRestante - (parcelasRestantes - 1) * compra.ValorParcelas;
+                compra.ValorParcelaAuxiliar = compra.ValorParcelas + diferenca;
+                compra.QtdParcelasAtual--;
             }
             else
             {
