@@ -180,18 +180,36 @@ namespace CarrinhoCompraAPI.Domain.Services
                 }
 
                 valorTotalAbatidoProduto += produto.ValorAbatidoProduto;
-                if (valorTotalAbatidoProduto > compra.ValorAbatido)
+
+                if (produto == produtosCompra[produtosCompra.Count - 1])
                 {
-                    decimal difereca = valorTotalAbatidoProduto - compra.ValorAbatido;
-                    produto.ValorAbatidoProduto -= difereca;
-                    produto.ValorRestanteProduto += difereca;
-                    if (produto.ValorParcelaAuxiliarProduto != 0)
+                    if (valorTotalAbatidoProduto > compra.ValorAbatido)
                     {
-                        produto.ValorParcelaAuxiliarProduto += difereca;
+                        decimal diferenca = valorTotalAbatidoProduto - compra.ValorAbatido;
+                        produto.ValorAbatidoProduto -= diferenca;
+                        produto.ValorRestanteProduto += diferenca;
+                        if (produto.ValorParcelaAuxiliarProduto != 0)
+                        {
+                            produto.ValorParcelaAuxiliarProduto += diferenca;
+                        }
+                        else
+                        {
+                            produto.ValorParcelaAuxiliarProduto = produto.ValorParcelasProduto + diferenca;
+                        }
                     }
-                    else
+                    else if (valorTotalAbatidoProduto < compra.ValorAbatido)
                     {
-                        produto.ValorParcelaAuxiliarProduto = produto.ValorParcelasProduto + difereca;
+                        decimal diferenca = compra.ValorAbatido - valorTotalAbatidoProduto;
+                        produto.ValorAbatidoProduto += diferenca;
+                        produto.ValorRestanteProduto -= diferenca;
+                        if (produto.ValorParcelaAuxiliarProduto != 0)
+                        {
+                            produto.ValorParcelaAuxiliarProduto -= diferenca;
+                        }
+                        else
+                        {
+                            produto.ValorParcelaAuxiliarProduto = produto.ValorParcelasProduto += -diferenca;
+                        }
                     }
                 }
 
