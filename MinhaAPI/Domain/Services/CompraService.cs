@@ -51,17 +51,17 @@ namespace CarrinhoCompraAPI.Domain.Services
                 throw new InvalidOperationException("Não é possível criar uma compra sem produtos no carrinho.");
 
             // Calcula o valor total da compra
-            double valorTotalCompra = Math.Round(produtosCarrinho.Sum(item => item.ValorTotalProduto), 2);
+            decimal valorTotalCompra = Math.Round(produtosCarrinho.Sum(item => item.ValorTotalProduto), 2);
 
             // Calcula o valor da parcela
-            double valorParcela = Math.Round(valorTotalCompra / quantidadeParcelas, 2);
+            decimal valorParcela = Math.Round((produtosCarrinho.Sum(item => Math.Round((item.ValorTotalProduto / quantidadeParcelas), 2))), 2);
 
             if (valorParcela < 40)
                 throw new ArgumentException("O valor minimo da paracela é R$ 40.00");
 
             // Checa se uma das parcelas terá um valor diferente
             var resto = Math.Round(valorTotalCompra - valorParcela * quantidadeParcelas, 2);
-            double valorParcelaAuxiliar = Math.Round(valorParcela + resto, 2);
+            decimal valorParcelaAuxiliar = Math.Round(valorParcela + resto, 2);
 
             if (resto == 0)
                 valorParcelaAuxiliar = 0;
@@ -84,11 +84,27 @@ namespace CarrinhoCompraAPI.Domain.Services
             // Faz a relação de quais produtos e suas quantidades estão na compra criada
             foreach (var produto in produtosCarrinho)
             {
+                decimal parcelaProduto = Math.Round((produto.ValorTotalProduto / quantidadeParcelas), 2);
+                decimal restoProduto = Math.Round(produto.ValorTotalProduto - parcelaProduto * quantidadeParcelas, 2);
+                decimal parcelaAuxiliarProduto = 0;
+
+                if (restoProduto != 0)
+                {
+                    parcelaAuxiliarProduto = Math.Round(parcelaProduto + restoProduto, 2);
+                }
+
                 var compraProduto = new CompraProdutoModel
                 {
                     CompraId = compra.Id,
                     ProdutoId = produto.ProdutoId,
-                    QtdProduto = produto.QtdProduto
+                    QtdProduto = produto.QtdProduto,
+                    ValorTotalProduto =  produto.ValorTotalProduto,
+                    QtdParcelas = quantidadeParcelas,
+                    ValorParcelasProduto = parcelaProduto,
+                    ValorParcelaAuxiliarProduto = parcelaAuxiliarProduto,
+                    ValorAbatidoProduto = 0,
+                    QtdParcelasAtual = quantidadeParcelas,
+                    ValorRestanteProduto = produto.ValorTotalProduto
                 };
 
                 await _compraProdutoRepository.AddCompraProduto(compraProduto);
@@ -101,7 +117,7 @@ namespace CarrinhoCompraAPI.Domain.Services
         }
 
         // Abate um determinado valor da compra
-        public async Task<int> AbaterValorCompra(int compraId, double valorAbate)
+        public async Task<int> AbaterValorCompra(int compraId, decimal valorAbate)
         {
             if (valorAbate <= 0)
                 throw new ArgumentException("O valor deve ser maior que zero.");
@@ -113,6 +129,9 @@ namespace CarrinhoCompraAPI.Domain.Services
             if (valorAbate > compra.ValorRestante)
                 throw new ArgumentException("O valor de abate excede o valor restante da compra.");
 
+            if (compra.QtdParcelas == 1 && valorAbate != compra.ValorRestante)
+                throw new ArgumentException("O ultimo valor a ser abatido deve ser igual ao valor restante da compra");
+
             // Atualiza o valor que deverá ser pago futuramente
             compra.ValorRestante -= valorAbate;
 
@@ -123,16 +142,14 @@ namespace CarrinhoCompraAPI.Domain.Services
             if (compra.QtdParcelasAtual < 0)
                 compra.QtdParcelasAtual = 0;
 
-            double somaParcelas = compra.ValorParcelas * parcelasRestantes; ;
-
             // Checa se a soma das parcelas ultrapassar o valor restante e faz as devidas adaptações para cada caso
             if (valorAbate == compra.ValorParcelaAuxiliar)
             {
                 compra.ValorParcelaAuxiliar = 0;
             }
-            else if (somaParcelas > compra.ValorRestante)
+            else if ((compra.ValorParcelas * parcelasRestantes) > compra.ValorRestante)
             {
-                double diferenca = compra.ValorRestante - (parcelasRestantes - 1) * compra.ValorParcelas;
+                decimal diferenca = Math.Round((compra.ValorRestante - (parcelasRestantes - 1) * compra.ValorParcelas), 2);
                 compra.ValorParcelaAuxiliar = compra.ValorParcelas + diferenca;
                 compra.QtdParcelasAtual--;
             }
@@ -143,6 +160,25 @@ namespace CarrinhoCompraAPI.Domain.Services
 
             // Incrementa o valor pago até o momento
             compra.ValorAbatido += valorAbate;
+
+            var produtosCompra = await _compraProdutoRepository.ListProdutosDaCompra(compra.Id);
+            foreach (var produto in produtosCompra)
+            {
+                decimal porcentagemParcela = Math.Round((produto.ValorParcelasProduto * 100 / compra.ValorParcelas), 2);
+                decimal valorAbateProduto = Math.Round((valorAbate * porcentagemParcela / 100), 2);
+
+                produto.ValorRestanteProduto -= valorAbateProduto;
+                produto.ValorAbatidoProduto += valorAbateProduto;
+                produto.QtdParcelasAtual = compra.QtdParcelasAtual;
+
+                decimal somaParcelas = Math.Round((produto.ValorParcelasProduto * produto.QtdParcelasAtual), 2);
+
+                if (somaParcelas != produto.ValorRestanteProduto)
+                {
+                    produto.ValorParcelaAuxiliarProduto = Math.Round(produto.ValorRestanteProduto - (produto.ValorParcelasProduto * (produto.QtdParcelasAtual - 1)), 2);
+                }
+                await _compraProdutoRepository.UpdateProdutoCompra(produto);
+            }
 
             return await _compraRepository.UpdateCompra(compra);
         }

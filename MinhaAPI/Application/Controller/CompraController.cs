@@ -65,7 +65,7 @@ namespace CarrinhoCompraAPI.Application.Controller
         }
 
         [HttpPost("abater-valor-compra")]
-        public async Task<ActionResult> AbaterValorCompra([FromQuery] int compraId, [FromQuery] double valorAbate)
+        public async Task<ActionResult> AbaterValorCompra([FromQuery] int compraId, [FromQuery] decimal valorAbate)
         {
             try
             {

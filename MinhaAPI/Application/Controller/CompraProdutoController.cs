@@ -33,11 +33,11 @@ namespace CarrinhoCompraAPI.Application.Controller
         }
 
         [HttpGet("produto-parcela")]
-        public async Task<ActionResult> GerarParcelaProduto([FromQuery] int compraId, [FromQuery] int produtoId)
+        public async Task<ActionResult> ParcelaProduto([FromQuery] int compraId, [FromQuery] int produtoId)
         {
             try
             {
-                var parcelaProduto = await _compraProdutoService.GerarParcelaProduto(compraId, produtoId);
+                var parcelaProduto = await _compraProdutoService.ParcelaProduto(compraId, produtoId);
                 return Ok(parcelaProduto);
             }
             catch (Exception ex)

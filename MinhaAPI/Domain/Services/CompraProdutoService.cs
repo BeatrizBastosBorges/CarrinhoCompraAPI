@@ -37,7 +37,7 @@ namespace CarrinhoCompraAPI.Domain.Services
         }
 
         // Gera o quanto um produto vale em cada parcela da compra, lvando em conta a quantidade total desse produto
-        public async Task<string> GerarParcelaProduto(int compraId, int produtoId)
+        public async Task<string> ParcelaProduto(int compraId, int produtoId)
         {
             CompraProdutoModel compraProduto = await _compraProdutoRepository.GetCompraProduto(compraId, produtoId);
             if (compraProduto == null)
@@ -52,17 +52,19 @@ namespace CarrinhoCompraAPI.Domain.Services
                 throw new ArgumentException("Produto não existe!");
 
             // Calcula a parcela
-            double parcelaProduto = Math.Round(produto.PrecoUnitarioProduto * compraProduto.QtdProduto / compra.QtdParcelas, 2);
+            decimal parcelaProduto = Math.Round(produto.PrecoUnitarioProduto * compraProduto.QtdProduto / compra.QtdParcelas, 2);
 
             // Checa se uma das parcelas terá um valor diferente
             var resto = Math.Round(produto.PrecoUnitarioProduto * compraProduto.QtdProduto - parcelaProduto * compra.QtdParcelas, 2);
 
             if (resto == 0)
-                return $"O produto está parcelado em {compra.QtdParcelas} vezes de R$ {parcelaProduto};";
+            {
+                return $"O produto está parcelado em {compra.QtdParcelas} vezes de R$ {parcelaProduto}.";
+            }
             else
             {
-                double parcelaAuxiliarProduto = Math.Round(parcelaProduto + resto, 2);
-                return $"O produto está parcelado em {compra.QtdParcelas - 1} vezes de R$ {parcelaProduto} e uma parcela de R$ {parcelaAuxiliarProduto};";
+                decimal parcelaAuxiliarProduto = Math.Round(parcelaProduto + resto, 2);
+                return $"O produto está parcelado em {compra.QtdParcelas - 1} vezes de R$ {parcelaProduto} e uma parcela de R$ {parcelaAuxiliarProduto}.";
             }
         }
 
@@ -82,17 +84,17 @@ namespace CarrinhoCompraAPI.Domain.Services
                 throw new ArgumentException("Produto não existe!");
 
             // Calcula a parcela
-            double parcelaProduto = Math.Round(produto.PrecoUnitarioProduto / compra.QtdParcelas, 2);
+            decimal parcelaProduto = Math.Round(produto.PrecoUnitarioProduto / compra.QtdParcelas, 2);
 
             // Checa se uma das parcelas terá um valor diferente
             var resto = Math.Round(produto.PrecoUnitarioProduto - parcelaProduto * compra.QtdParcelas, 2);
 
             if (resto == 0)
-                return $"A unidade do produto está parcelada em {compra.QtdParcelas} vezes de R$ {parcelaProduto};";
+                return $"A unidade do produto está parcelada em {compra.QtdParcelas} vezes de R$ {parcelaProduto}.";
             else
             {
-                double parcelaAuxiliarProduto = Math.Round(parcelaProduto + resto, 2);
-                return $"A unidade do produto está parcelada em {compra.QtdParcelas - 1} vezes de R$ {parcelaProduto} e uma parcela de R$ {parcelaAuxiliarProduto};";
+                decimal parcelaAuxiliarProduto = Math.Round(parcelaProduto + resto, 2);
+                return $"A unidade do produto está parcelada em {compra.QtdParcelas - 1} vezes de R$ {parcelaProduto} e uma parcela de R$ {parcelaAuxiliarProduto}.";
             }
         }
     }

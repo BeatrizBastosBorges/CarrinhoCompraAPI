@@ -3,14 +3,16 @@ using CarrinhoCompraAPI.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MinhaAPI.Migrations
 {
     [DbContext(typeof(SqlServerContext))]
-    partial class SqlServerContextModelSnapshot : ModelSnapshot
+    [Migration("20240401170144_AtributosDeProduto-Em-CompraProduto")]
+    partial class AtributosDeProdutoEmCompraProduto
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,8 +33,8 @@ namespace MinhaAPI.Migrations
                     b.Property<int>("QtdProduto")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ValorTotalProduto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorTotalProduto")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -54,20 +56,20 @@ namespace MinhaAPI.Migrations
                     b.Property<int>("QtdParcelasAtual")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ValorAbatido")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorAbatido")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorParcelaAuxiliar")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorParcelaAuxiliar")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorParcelas")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorParcelas")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorRestante")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorRestante")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorTotalCompra")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorTotalCompra")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -96,20 +98,20 @@ namespace MinhaAPI.Migrations
                     b.Property<int>("QtdProduto")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("ValorAbatidoProduto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorAbatidoProduto")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorParcelaAuxiliarProduto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorParcelaAuxiliarProduto")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorParcelasProduto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorParcelasProduto")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorRestanteProduto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorRestanteProduto")
+                        .HasColumnType("float");
 
-                    b.Property<decimal>("ValorTotalProduto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("ValorTotalProduto")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -130,8 +132,8 @@ namespace MinhaAPI.Migrations
                     b.Property<string>("NomeProduto")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PrecoUnitarioProduto")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<double>("PrecoUnitarioProduto")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

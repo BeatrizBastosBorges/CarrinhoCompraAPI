@@ -6,7 +6,7 @@ namespace CarrinhoCompraAPI.Domain.Models
     {
         public int Id { get; set; }
         public string NomeProduto { get; set; }
-        public double PrecoUnitarioProduto { get; set; }
+        public decimal PrecoUnitarioProduto { get; set; }
 
         public List<CompraProdutoModel> ComprasProduto { get; set; }
     }

@@ -54,7 +54,7 @@ namespace CarrinhoCompraAPI.Domain.Services
             {
                 ProdutoId = produtoId,
                 QtdProduto = quantidade,
-                ValorTotalProduto = produto.PrecoUnitarioProduto * quantidade
+                ValorTotalProduto = Math.Round((produto.PrecoUnitarioProduto * quantidade), 2)
             };
 
             await _carrinhoRepository.AddProduto(produtoCarrinho);
@@ -74,7 +74,7 @@ namespace CarrinhoCompraAPI.Domain.Services
                 throw new ArgumentException("Produto não encontrado.");
 
             produtoCarrinho.QtdProduto = quantidade;
-            produtoCarrinho.ValorTotalProduto = produto.PrecoUnitarioProduto * quantidade;
+            produtoCarrinho.ValorTotalProduto = Math.Round((produto.PrecoUnitarioProduto * quantidade), 2);
 
             await _carrinhoRepository.UpdateProdutoCarrinho(produtoCarrinho);
         }

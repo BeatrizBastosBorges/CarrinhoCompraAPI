@@ -46,6 +46,13 @@ namespace CarrinhoCompraAPI.Infrastructure.Data.Repositories
 
         }
 
+        public async Task<int> UpdateProdutoCompra(CompraProdutoModel produto)
+        {
+            _context.Entry(produto).State = EntityState.Modified;
+
+            return await _context.SaveChangesAsync();
+        }
+
         public async Task<bool> DeleteProdutosDaCompra(int compraId)
         {
             var compraProdutos = await _context.CompraProdutos.Where(cp => cp.CompraId == compraId).ToListAsync();
