@@ -162,6 +162,7 @@ namespace CarrinhoCompraAPI.Domain.Services
             compra.ValorAbatido += valorAbate;
 
             var produtosCompra = await _compraProdutoRepository.ListProdutosDaCompra(compra.Id);
+            decimal valorTotalAbatidoProduto = 0;
             foreach (var produto in produtosCompra)
             {
                 decimal porcentagemParcela = Math.Round((produto.ValorParcelasProduto * 100 / compra.ValorParcelas), 2);
@@ -177,6 +178,23 @@ namespace CarrinhoCompraAPI.Domain.Services
                 {
                     produto.ValorParcelaAuxiliarProduto = Math.Round(produto.ValorRestanteProduto - (produto.ValorParcelasProduto * (produto.QtdParcelasAtual - 1)), 2);
                 }
+
+                valorTotalAbatidoProduto += produto.ValorAbatidoProduto;
+                if (valorTotalAbatidoProduto > compra.ValorAbatido)
+                {
+                    decimal difereca = valorTotalAbatidoProduto - compra.ValorAbatido;
+                    produto.ValorAbatidoProduto -= difereca;
+                    produto.ValorRestanteProduto += difereca;
+                    if (produto.ValorParcelaAuxiliarProduto != 0)
+                    {
+                        produto.ValorParcelaAuxiliarProduto += difereca;
+                    }
+                    else
+                    {
+                        produto.ValorParcelaAuxiliarProduto = produto.ValorParcelasProduto + difereca;
+                    }
+                }
+
                 await _compraProdutoRepository.UpdateProdutoCompra(produto);
             }
 
