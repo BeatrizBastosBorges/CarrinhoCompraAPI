@@ -32,7 +32,7 @@ namespace CarrinhoCompraAPI.Application.Controller
             }
         }
 
-        [HttpGet("get-compra-produto")]
+        [HttpGet("get-produto-da-compra")]
         public async Task<ActionResult> GetCompraProduto([FromQuery] int compraId, [FromQuery] int produtoId)
         {
             try
