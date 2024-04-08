@@ -33,25 +33,3 @@ Este repositório contém um projeto de um carrinho de compras desenvolvido em C
   </ul>
   <br>
 </ol>
-
-## Como Usar
-<br>
-<ol>
-  <li>Clone este repositório:</li>
-  <ul>
-    <li>git clone https://github.com/BeatrizBastosBorges/CarrinhoCompraAPI.git</li>
-  </ul>
-  <br>
-
-  <li>Instale as dependências:</li>
-  <ul>
-    <li>npm install</li>
-  </ul>
-  <br>
-
-  <li>npm install</li>
-  <ul>
-    <li>npm start</li>
-  </ul>
-  <br>
-</ol>
