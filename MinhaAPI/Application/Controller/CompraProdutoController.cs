@@ -18,7 +18,7 @@ namespace CarrinhoCompraAPI.Application.Controller
             _compraProdutoService = compraProdutoService;
         }
 
-        [HttpGet("get-produtos-da-compra")]
+        [HttpGet("list-produtos-da-compra")]
         public async Task<ActionResult> ListProdutosDaCompra([FromQuery] int compraId)
         {
             try
@@ -32,27 +32,13 @@ namespace CarrinhoCompraAPI.Application.Controller
             }
         }
 
-        [HttpGet("produto-parcela")]
-        public async Task<ActionResult> ParcelaProduto([FromQuery] int compraId, [FromQuery] int produtoId)
+        [HttpGet("get-compra-produto")]
+        public async Task<ActionResult> GetCompraProduto([FromQuery] int compraId, [FromQuery] int produtoId)
         {
             try
             {
-                var parcelaProduto = await _compraProdutoService.ParcelaProduto(compraId, produtoId);
-                return Ok(parcelaProduto);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpGet("unidade-produto-parcela")]
-        public async Task<ActionResult> GerarParcelaUnidadeProduto([FromQuery] int compraId, [FromQuery] int produtoId)
-        {
-            try
-            {
-                var parcelaUnidadeProduto = await _compraProdutoService.GerarParcelaUnidadeProduto(compraId, produtoId);
-                return Ok(parcelaUnidadeProduto);
+                CompraProdutoModel produto = await _compraProdutoService.GetCompraProduto(compraId, produtoId);
+                return Ok(produto);
             }
             catch (Exception ex)
             {

@@ -161,10 +161,14 @@ namespace CarrinhoCompraAPI.Domain.Services
             // Incrementa o valor pago até o momento
             compra.ValorAbatido += valorAbate;
 
+            // Faz a listagem dos produtos da compra
             var produtosCompra = await _compraProdutoRepository.ListProdutosDaCompra(compra.Id);
             decimal valorTotalAbatidoProduto = 0;
+
+            // Atualiza o valor abatido de todos os produtos ligados a compra
             foreach (var produto in produtosCompra)
             {
+                // Calcula quanto cada parcel do produto vale na parcela da compra
                 decimal porcentagemParcela = Math.Round((produto.ValorParcelasProduto * 100 / compra.ValorParcelas), 2);
                 decimal valorAbateProduto = Math.Round((valorAbate * porcentagemParcela / 100), 2);
 
@@ -174,6 +178,8 @@ namespace CarrinhoCompraAPI.Domain.Services
 
                 decimal somaParcelas = Math.Round((produto.ValorParcelasProduto * produto.QtdParcelasAtual), 2);
 
+                // Se soma de todas as parecals do produto resultarem em um valor diferente do valor restante do mesmo
+                // a parcela auxiliar será ajustada para que isso nção ocorra
                 if (somaParcelas != produto.ValorRestanteProduto)
                 {
                     produto.ValorParcelaAuxiliarProduto = Math.Round(produto.ValorRestanteProduto - (produto.ValorParcelasProduto * (produto.QtdParcelasAtual - 1)), 2);
@@ -181,6 +187,8 @@ namespace CarrinhoCompraAPI.Domain.Services
 
                 valorTotalAbatidoProduto += produto.ValorAbatidoProduto;
 
+                // Se no ultimo produto for detectado que o total abatido em todos ios produtos for diferente do valor abatido
+                // da compra a parcela auxiliar vai ser ajustada d acordo
                 if (produto == produtosCompra[produtosCompra.Count - 1])
                 {
                     if (valorTotalAbatidoProduto > compra.ValorAbatido)
