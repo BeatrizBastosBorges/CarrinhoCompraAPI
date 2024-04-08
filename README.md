@@ -6,26 +6,26 @@ Este repositório contém um projeto de um carrinho de compras desenvolvido em C
 ## Funcionalidades
 <br>
 <ol>
-  <li>Criar Produto</li>
+  <b><li>Criar Produto</li></b>
   <ul>
     <li>Permite criar um novo produto para ser adicionado ao carrinho de compras.</li>
   </ul>
   <br>
   
-  <li>Adicionar Produtos ao Carrinho</li>
+  <b><li>Adicionar Produtos ao Carrinho</li></b>
   <ul>
     <li>Permite adicionar produtos previamente criados ao carrinho de compras.</li>
   </ul>
   <br>
   
-  <li>Criar Compra</li>
+  <b><li>Criar Compra</li></b>
   <ul>
     <li>Permite criar uma compra com um determinado número de parcelas desde que o valor da parcela não seja menor que R$ 40,00.</li>
     <li>Ao criar uma compra, associa os produtos selecionados à compra, calcula o quanto cada produto valerá na parcela e remove esses produtos do carrinho.</li>
   </ul>
   <br>
   
-  <li>Abater Valor da Compra</li>
+  <b><li>Abater Valor da Compra</li></b>
   <ul>
     <li>Permite abater um valor específico da compra.</li>
     <li>Recalcula o valor das parcelas da compra com o desconto aplicado.</li>
