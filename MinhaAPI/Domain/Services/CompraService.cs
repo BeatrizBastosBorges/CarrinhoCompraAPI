@@ -216,7 +216,7 @@ namespace CarrinhoCompraAPI.Domain.Services
                         }
                         else
                         {
-                            produto.ValorParcelaAuxiliarProduto = produto.ValorParcelasProduto += -diferenca;
+                            produto.ValorParcelaAuxiliarProduto = produto.ValorParcelasProduto - diferenca;
                         }
                     }
                 }
